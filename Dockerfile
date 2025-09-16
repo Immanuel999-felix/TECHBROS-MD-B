@@ -1,30 +1,23 @@
 # ╭─❍「 📂 TECHBROS-MD DOCKERFILE 」❍
-FROM node:18-buster
+FROM node:lts-buster
 
-WORKDIR /usr/src/app
+# Set working directory
+WORKDIR /root/TECHBROS-MD
 
-# Install system dependencies (needed for sharp, canvas, etc.)
-RUN apt-get update && apt-get install -y \
-  python3 \
-  build-essential \
-  libcairo2-dev \
-  libpango1.0-dev \
-  libjpeg-dev \
-  libgif-dev \
-  librsvg2-dev \
-  && rm -rf /var/lib/apt/lists/*
-
-# Copy package files
+# Copy package files first (better cache)
 COPY package*.json ./
 
-# Install all dependencies
-RUN npm install
+# Install dependencies (prefer npm, fallback to yarn)
+RUN npm install || yarn install --network-concurrency 1
 
-# Copy bot source code
+# Copy all bot source code
 COPY . .
 
-# Expose port (Render expects this)
-EXPOSE 3000
+# Install pm2 globally (optional for process management)
+RUN npm install -g pm2
+
+# Expose bot port (Render needs this, 3000 is standard)
+EXPOSE 9090
 
 # Start the bot
 CMD ["node", "index.js"]
