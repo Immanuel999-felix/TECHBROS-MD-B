@@ -5,7 +5,7 @@ FROM node:20-alpine
 RUN apk add --no-cache \
     ffmpeg \
     imagemagick \
-    webp-dev
+    libwebp-tools
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app
