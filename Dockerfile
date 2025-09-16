@@ -11,7 +11,7 @@ RUN apk add --no-cache \
 WORKDIR /usr/src/app
 
 # Copy package.json and package-lock.json to leverage Docker cache
-COPY package*.json ./
+COPY package.json ./
 
 # Install application dependencies
 RUN npm install
