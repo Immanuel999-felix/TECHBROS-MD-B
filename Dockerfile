@@ -1,19 +1,30 @@
 # ╭─❍「 📂 TECHBROS-MD DOCKERFILE 」❍
-# │ Base image
 FROM node:18-buster
 
-# │ Set working directory
 WORKDIR /usr/src/app
 
-# │ Copy package files and install dependencies
-COPY package*.json ./
-RUN npm install --production
+# Install system dependencies (needed for sharp, canvas, etc.)
+RUN apt-get update && apt-get install -y \
+  python3 \
+  build-essential \
+  libcairo2-dev \
+  libpango1.0-dev \
+  libjpeg-dev \
+  libgif-dev \
+  librsvg2-dev \
+  && rm -rf /var/lib/apt/lists/*
 
-# │ Copy bot source code
+# Copy package files
+COPY package*.json ./
+
+# Install all dependencies
+RUN npm install
+
+# Copy bot source code
 COPY . .
 
-# │ Expose the port if needed (example: 3000)
+# Expose port (Render expects this)
 EXPOSE 3000
 
-# │ Start the bot
+# Start the bot
 CMD ["node", "index.js"]
