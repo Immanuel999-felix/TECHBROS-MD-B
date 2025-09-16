@@ -1,23 +1,19 @@
-# Use a lightweight Node.js LTS image based on the latest stable OS
-FROM node:20-alpine
+# ╭─❍「 📂 TECHBROS-MD DOCKERFILE 」❍
+# │ Base image
+FROM node:18-buster
 
-# Install system dependencies needed for media processing
-RUN apk add --no-cache \
-    ffmpeg \
-    imagemagick \
-    libwebp-tools
-
-# Set the working directory inside the container
+# │ Set working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to leverage Docker cache
-COPY package.json ./
+# │ Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install --production
 
-# Install application dependencies
-RUN npm install
-
-# Copy the rest of the application's source code
+# │ Copy bot source code
 COPY . .
 
-# Command to run the bot when the container starts
-CMD [ "npm", "start" ]
+# │ Expose the port if needed (example: 3000)
+EXPOSE 3000
+
+# │ Start the bot
+CMD ["node", "index.js"]
