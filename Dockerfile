@@ -1,16 +1,7 @@
 FROM node:lts-buster
-
-# Clone bot from GitHub
-RUN git clone https://github.com/Arslan-MD/Arslan_MD.git /root/arslan-bot
-
-# Set working directory
-WORKDIR /root/arslan-bot
-
-# Install dependencies
-RUN npm install && npm install -g pm2
-
-# Expose port
-EXPOSE 9090
-
-# Start the bot
+WORKDIR /app
+COPY package*.json ./
+RUN npm install && npm install -g qrcode-terminal pm2
+COPY . .
+EXPOSE 3000
 CMD ["npm", "start"]
